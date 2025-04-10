@@ -2,13 +2,23 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="election-management" />
         <module name="voting-app" />
         <module name="result-app" />
+      </profile>
+      <profile name="Annotation profile for election-management" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/inferred/freebuilder/2.8.0/freebuilder-2.8.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/inferred/freebuilder/2.8.0/freebuilder-2.8.0.jar" />
+        </processorPath>
+        <module name="election-management" />
       </profile>
     </annotationProcessing>
   </component>
