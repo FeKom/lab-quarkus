@@ -14,6 +14,12 @@ services:
       - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.traefik.entrypoints=web
+      - traefik.http.routers.traefik.service=api@internal
+
 
   # APPLICATIONS
 
@@ -25,9 +31,9 @@ services:
       context: ./election-management
       #dockerfile: src/main/docker/Dockerfile.native
       dockerfile: src/main/docker/Dockerfile.jvm
-    image: fekom/election-management:${TAG:-1.0.0}
+    image: fekom/election-management:${TAG}
     labels:
-      - traefik.http.routers.election-management.rule=Host(`vote.dio.localhost`) && PathPrefix(`/api`)
+      - traefik.http.routers.election-management.rule=Host(`vote.fekom.localhost`) && PathPrefix(`/api`)
       - traefik.http.routers.election-management.entrypoints=web
 
   voting-app:
@@ -38,9 +44,9 @@ services:
       context: ./voting-app
       #dockerfile: src/main/docker/Dockerfile.native
       dockerfile: src/main/docker/Dockerfile.jvm
-    image: fekom/voting-app:${TAG:-1.0.0}
+    image: fekom/voting-app:${TAG}
     labels:
-      - traefik.http.routers.voting-app.rule=Host(`vote.dio.localhost`) && PathPrefix(`/api/voting`)
+      - traefik.http.routers.voting-app.rule=Host(`vote.fekom.localhost`) && PathPrefix(`/api/voting`)
       - traefik.http.routers.voting-app.entrypoints=web
 
   result-app:
@@ -51,9 +57,9 @@ services:
       context: ./result-app
       #dockerfile: src/main/docker/Dockerfile.native
       dockerfile: src/main/docker/Dockerfile.jvm
-    image: fekom/result-app:${TAG:-1.0.0}
+    image: fekom/result-app:${TAG}
     labels:
-      - traefik.http.routers.result-app.rule=Host(`vote.dio.localhost`) && PathPrefix(`/api/voting`)
+      - traefik.http.routers.result-app.rule=Host(`vote.fekom.localhost`) && PathPrefix(`/api/voting`)
       - traefik.http.routers.result-app.entrypoints=web
 
   #DATABASE - https://quarkus.io/guide/datasource
@@ -106,7 +112,7 @@ services:
         condition: service_started
     labels:
       - traefik.enabled=true
-      - traefik.http.routers.graylog.role=Host(`logging.private.dio.localhost`)
+      - traefik.http.routers.graylog.role=Host(`logging.private.fekom.localhost`)
       - traefik.http.routers.graylog.entrypoints=web
       - traefik.http.routers.graylog.service=graylog
       - traefik.http.services.graylog.loadbalancer.server.port=9000
@@ -121,7 +127,7 @@ services:
     labels:
       - traefik.enabled=true
       - traefik.http.middlewares.admin/admin-auth.basicauth.users=admin:$$2y$$05$$B3PS97vYDsx6Hk4e/F8bSOGdB2uq.oabTU7SbMdjJKxdAeKKI8pTO
-      - traefik.http.routers.jaeger.rule=Host(`telemetry.private.dio.localhost`)
+      - traefik.http.routers.jaeger.rule=Host(`telemetry.private.fekom.localhost`)
       - traefik.http.routers.jaeger.entrypoints=web
       - traefik.http.routers.jaeger.service=jaeger
       - traefik.http.routers.jaeger.middlewares=admin-admin-auth@docker
